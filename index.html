@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="UTF-8">
+    <title> Login and Signup Form </title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Fontawesome CDN Link -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   </head>
+<body>
+  <div class="container">
+    <input type="checkbox" id="flip">
+    <div class="cover">
+      <div class="front">
+        <img class="FrontLogo2" src="images/Logo2.jpg" alt="">
+      </div>
+      <div class="back">
+        <img class="BackLogo2" src="images/Logo2.jpg" alt="">
+      </div>
+    </div>
+    <div class="forms">
+        <div class="form-content">
+          <div class="login-form">
+            <div class="title">Login</div>
+          <form action="#">
+            <div class="input-boxes">
+              <div class="input-box">
+                <i class="fas fa-envelope"></i>
+                <input type="text" placeholder="Enter your email" required>
+              </div>
+              <div class="input-box">
+                <i class="fas fa-lock"></i>
+                <input type="password" placeholder="Enter your password" required>
+              </div>
+              <div class="text"><a href="#">Forgot password?</a></div>
+              <div class="button input-box">
+                <input type="submit" value="Sumbit">
+              </div>
+              <div class="text sign-up-text">Don't have an account? <label for="flip">Sigup now</label></div>
+            </div>
+        </form>
+      </div>
+        <div class="signup-form">
+          <div class="title">Signup</div>
+        <form action="#">
+            <div class="input-boxes">
+              <div class="input-box">
+                <input type="text" placeholder="Fullname" required>
+              </div>
+              <div class="input-box">
+                <input type="text" placeholder="Age" required>
+              </div>
+              <div class="input-box">
+                <input type="date" placeholder="Date" required>
+              </div>
+              <div class="input-box">
+                <input type="Address" placeholder="Address" required>
+              </div>
+              <div class="input-box">
+                <input type="tel" id="contact" name="contact" placeholder="Enter your contact number" required>
+              </div>
+              <div class="input-box">
+                <input type="email" id="email" name="email" placeholder="example@example.com" required>
+              </div>
+              <div class="input-box">
+                <input type="password" id="password" name="password" placeholder="Password" required>
+              </div>
+              <div class="button input-box">
+                <input type="submit" value="Sumbit">
+              </div>
+              <div class="text sign-up-text">Already have an account? <label for="flip">Login now</label></div>
+            </div>
+      </form>
+    </div>
+    </div>
+    </div>
+  </div>
+</body>
+</html>
+
+<?php
+// Start the session
+session_start();
+
+// Check if the form is submitted
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Get the form data
+    $email = $_POST["email"];
+    $password = $_POST["password"];
+    
+    // Your database credentials
+    $servername = "localhost";
+    $username = "your_username";
+    $password_db = "your_password";
+    $dbname = "your_database";
+
+    // Create connection
+    $conn = new mysqli($servername, $username, $password_db, $dbname);
+
+    // Check connection
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    }
+
+    // Prepare SQL statement to retrieve user with the given email and password
+    $sql = "SELECT * FROM accounts WHERE email = '$email' AND password = '$password'";
+    $result = $conn->query($sql);
+
+    if ($result->num_rows == 1) {
+        // User found, set session variables and redirect to dashboard or home page
+        $_SESSION["loggedin"] = true;
+        $_SESSION["email"] = $email;
+        header("location: dashboard.php");
+        exit;
+    } else {
+        // User not found or incorrect credentials
+        $error = "Invalid email or password";
+    }
+
+    $conn->close();
+}
+?>
